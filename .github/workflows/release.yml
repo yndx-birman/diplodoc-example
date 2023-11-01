@@ -33,6 +33,7 @@ jobs:
         uses: ./actions/upload
         with:
           revision: "${{ github.sha }}"
+          project-link: ${{ vars.PROJECT_LINK }}
           storage-endpoint: ${{ vars.DIPLODOC_STORAGE_ENDPOINT }}
           storage-region: ${{ vars.DIPLODOC_STORAGE_REGION }}
           storage-bucket: ${{ vars.DIPLODOC_STORAGE_BUCKET }}
