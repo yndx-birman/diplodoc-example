@@ -1,0 +1,84 @@
+name: docs-upload-action
+description: Upload documentation
+
+inputs:
+  revision:
+    default: ''
+  build-root:
+    default: "./_docs-build"
+  github-token:
+    default: ''
+  storage-bucket:
+    required: true
+  storage-endpoint:
+    required: true
+  storage-access-key-id:
+    required: true
+  storage-secret-access-key:
+    required: true
+  storage-region:
+    required: true
+  stage:
+    default: "stable"
+
+runs:
+  using: composite
+  steps:
+    - name: Download inputs
+      if: "${{ inputs.revision == '' }}"
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        github_token: ${{ inputs.github-token }}
+        workflow: ${{ github.event.workflow_run.workflow_id }}
+        name: inputs
+    - name: Download build artifact
+      if: "${{ inputs.revision == '' }}"
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        github_token: ${{ inputs.github-token }}
+        workflow: ${{ github.event.workflow_run.workflow_id }}
+        name: build-output-md
+        path: ${{ inputs.build-root }}
+
+    - name: Get revision
+      id: get-revision
+      run: |
+        if [[ ! -n "${{ inputs.revision }}" ]]; then
+          echo "revision=$(cat ./revision)" >> $GITHUB_OUTPUT
+        else
+          echo "revision=${{ inputs.revision }}" >> $GITHUB_OUTPUT
+        fi
+      shell: bash
+
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - run: npm i @diplodoc/cli -g
+      shell: bash
+    - name: Set BUCKET and PREFIX
+      shell: bash
+      run: |
+        if [[ "${{ inputs.storage-bucket }}" =~ "/" ]]; then
+          echo "Detected complex bucket name"
+
+          COMPLEX="${{ inputs.storage-bucket }}"
+          PARTS=(${COMPLEX//\// })
+          PREFIX=${PARTS[@]:1}
+
+          echo "BUCKET=${PARTS[0]}-${{ inputs.stage }}" >> $GITHUB_ENV
+          echo "PREFIX=${PREFIX// //}/rev/${{ steps.get-revision.outputs.revision }}" >> $GITHUB_ENV
+        else
+          echo "BUCKET=${{ inputs.storage-bucket }}-${{ inputs.stage }}" >> $GITHUB_ENV
+          echo "PREFIX=rev/${{ steps.get-revision.outputs.revision }}" >> $GITHUB_ENV
+        fi
+    - name: Upload S3
+      shell: bash
+      run: |
+        yfm publish \
+          -i "${{ inputs.build-root }}" \
+          --endpoint "${{ inputs.storage-endpoint }}" \
+          --region "${{ inputs.storage-region }}" \
+          --bucket "${{ env.BUCKET }}" \
+          --prefix "${{ env.PREFIX }}" \
+          --access-key-id "${{ inputs.storage-access-key-id }}" \
+          --secret-access-key "${{ inputs.storage-secret-access-key }}"

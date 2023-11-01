@@ -2,10 +2,6 @@ name: Release
 
 on:
   workflow_dispatch:
-  pull_request:
-    types: [closed]
-    branches:    
-      - main
 
 jobs:
   check-env:
@@ -23,21 +19,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build
-        uses: diplodoc-platform/docs-build-action@v2
+        uses: ./actions/build
         with:
           revision: "${{ github.sha }}"
           src-root: "./docs"
+  upload:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Upload
+        uses: ./actions/upload
+        with:
+          revision: "${{ github.sha }}"
           storage-endpoint: ${{ vars.DIPLODOC_STORAGE_ENDPOINT }}
           storage-region: ${{ vars.DIPLODOC_STORAGE_REGION }}
           storage-bucket: ${{ vars.DIPLODOC_STORAGE_BUCKET }}
           storage-access-key-id: ${{ secrets.DIPLODOC_ACCESS_KEY_ID }}
           storage-secret-access-key: ${{ secrets.DIPLODOC_SECRET_ACCESS_KEY }}
   release:
-    needs: build
+    needs: upload
     runs-on: ubuntu-latest
     steps:
       - name: Release
-        uses: diplodoc-platform/docs-release-action@v2
+        uses: ./actions/release
         with:
           revision: "${{ github.sha }}"
           storage-bucket: ${{ vars.DIPLODOC_STORAGE_BUCKET }}

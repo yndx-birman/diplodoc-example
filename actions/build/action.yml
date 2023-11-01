@@ -1,0 +1,63 @@
+name: docs-build-action
+description: Build documentation
+
+inputs:
+  revision:
+    required: true
+  src-root:
+    default: "./"
+  lint-root:
+    default: "./_docs-lint"
+  build-root:
+    default: "./_docs-build"
+  upload-artifacts:
+    type: boolean
+    default: false
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - run: npm i @diplodoc/cli -g
+      shell: bash
+    - run: yfm -i ${{ inputs.src-root }} -o ${{ inputs.lint-root }}
+      shell: bash
+    - name: build
+      run: |
+        yfm -i ${{ inputs.src-root }} -o ${{ inputs.build-root }} --output-format md --add-map-file --allow-custom-resources
+      shell: bash
+
+    - name: Save inputs
+      if: ${{ inputs.upload-artifacts == 'true' }}
+      run: |
+        mkdir -p ./inputs
+        echo ${{ inputs.revision }} > ./inputs/revision
+      shell: bash
+    - name: Upload inputs
+      uses: actions/upload-artifact@v3
+      if: ${{ inputs.upload-artifacts == 'true' }}
+      with:
+        name: inputs
+        path: inputs/
+        retention-days: 1
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      if: ${{ inputs.upload-artifacts == 'true' }}
+      with:
+        name: build-output-md
+        path: ${{ inputs.build-root }}
+        retention-days: 1
+
+    - name: 'Comment to PR'
+      uses: actions/github-script@v6
+      if: github.event_name == 'pull_request' && github.event.action != 'closed'
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: 'Build is successfull'
+          })

@@ -1,0 +1,45 @@
+name: docs-release-action
+description: Register new stable version of documentation
+
+inputs:
+  revision:
+    required: true
+  storage-bucket:
+    required: true
+  storage-access-key-id:
+    required: true
+  storage-secret-access-key:
+    required: true
+  version:
+    default: ""
+  server:
+    default: "https://viewer.diplodoc.com"
+
+runs:
+  using: composite
+  steps:
+    - name: Update head
+      shell: bash
+      run: |
+        set -e
+
+        RESPONSE_CODE=$(curl \
+          --header "Content-Type: application/json" \
+          --silent \
+          --output RESPONSE \
+          --write-out "%{http_code}" \
+          --data-binary @- \
+          ${{ inputs.server }}/_/api/head <<< $(jq -c -n '{
+                revision:"${{ inputs.revision }}",
+                version:"${{ inputs.version }}",
+                project:"${{ inputs.storage-bucket }}",
+                accessKeyId:"${{ inputs.storage-access-key-id }}",
+                secretAccessKey:"${{ inputs.storage-secret-access-key }}"
+          }'))
+
+        if [[ "$RESPONSE_CODE" == "200" ]]; then
+          exit 0
+        fi
+
+        echo "::error::$(jq '.message' -r RESPONSE)"
+        exit 1
