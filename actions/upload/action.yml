@@ -109,7 +109,6 @@ runs:
       with:
         script: |
           const {PROJECT_LINK, REVISION, PR_NUMBER} = process.env;
-          console.log('TEST', PR_NUMBER, context.repo.owner, context.repo.repo)
           github.rest.issues.createComment({
             issue_number: PR_NUMBER,
             owner: context.repo.owner,
