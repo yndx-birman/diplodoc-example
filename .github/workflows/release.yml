@@ -15,6 +15,7 @@ jobs:
   build:
     needs: check-env
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -26,12 +27,14 @@ jobs:
   upload:
     needs: build
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Upload
         uses: ./actions/upload
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           revision: "${{ github.sha }}"
           project-link: ${{ vars.DIPLODOC_PROJECT_LINK }}
           storage-endpoint: ${{ vars.DIPLODOC_STORAGE_ENDPOINT }}

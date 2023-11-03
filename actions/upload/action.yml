@@ -5,7 +5,7 @@ inputs:
   build-root:
     default: "./_docs-build"
   github-token:
-    default: ''
+    required: true
   project-link:
     required: true
   storage-bucket:
