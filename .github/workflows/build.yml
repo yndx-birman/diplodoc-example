@@ -16,4 +16,3 @@ jobs:
         with:
           revision: "pr-${{ github.event.pull_request.number }}"
           src-root: "./docs"
-          upload-artifacts: true
