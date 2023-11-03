@@ -88,6 +88,7 @@ runs:
     - name: Get Pull Request Number
       if: github.event.workflow == 'pull_request && github.event.workflow_run.event != 'closed'
       id: pr_info
+      shell: bash
       run: |
         workflow_run_id=${{ github.event.workflow_run.id }}
         repo_name=${{ github.repository }}
