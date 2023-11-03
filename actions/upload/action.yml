@@ -37,6 +37,8 @@ runs:
              run_id: context.runId || context.payload.workflow_run.id,
           });
 
+          console.log(allArtifacts)
+
           const downloads = await Promise.all(allArtifacts.map(async (artifact) => {
             return github.rest.actions.downloadArtifact({
               owner: context.repo.owner,
