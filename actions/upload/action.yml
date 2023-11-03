@@ -2,8 +2,6 @@ name: docs-upload-action
 description: Upload documentation
 
 inputs:
-  build-root:
-    default: "./_docs-build"
   github-token:
     required: true
   project-link:
@@ -24,26 +22,45 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Download inputs
-      uses: dawidd6/action-download-artifact@v2
+    - name: 'Download artifacts'
+      uses: actions/github-script@v6
+      env:
+        GITHUB_TOKEN: "${{ inputs.github-token }}"
       with:
-        github_token: ${{ inputs.github-token }}
-        name: inputs
-        run_id: ${{ github.run_id }}
-        workflow: ${{ github.event.workflow_run.workflow_id }}
-    - name: Download build artifact
-      uses: dawidd6/action-download-artifact@v2
-      with:
-        github_token: ${{ inputs.github-token }}
-        run_id: ${{ github.run_id }}
-        workflow: ${{ github.event.workflow_run.workflow_id }}
-        name: build-output-md
-        path: ${{ inputs.build-root }}
+        script: |
+          const {GITHUB_TOKEN} = process.env;
+
+          const allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+             token: GITHUB_TOKEN,
+             owner: context.repo.owner,
+             repo: context.repo.repo,
+             run_id: context.run_id || context.payload.workflow_run.id,
+          });
+
+          const downloads = await Promise.all(allArtifacts.map(async (artifact) => {
+            return github.rest.actions.downloadArtifact({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: artifact.id,
+              archive_format: 'zip',
+            });
+          }));
+
+          const fs = require('fs');
+
+          allArtifacts.forEach((artifact, index) => {
+            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/${artifact.name}.zip`, Buffer.from(downloads[index].data));
+          });
+
+    - name: 'Unzip artifacts'
+      run: |
+        unzip inputs.zip
+        unzip build-output-md.zip
 
     - name: Get revision
       id: get-revision
       run: |
-        echo "revision=$(cat ./revision)" >> $GITHUB_OUTPUT
+        echo "revision=$(cat ./inputs/revision)" >> $GITHUB_OUTPUT
       shell: bash
 
     - uses: actions/setup-node@v3
@@ -71,7 +88,7 @@ runs:
       shell: bash
       run: |
         yfm publish \
-          -i "${{ inputs.build-root }}" \
+          -i ./build-output-md \
           --endpoint "${{ inputs.storage-endpoint }}" \
           --region "${{ inputs.storage-region }}" \
           --bucket "${{ env.BUCKET }}" \
