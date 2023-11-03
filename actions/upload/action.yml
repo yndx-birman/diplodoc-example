@@ -86,7 +86,7 @@ runs:
           --secret-access-key "${{ inputs.storage-secret-access-key }}"
 
     - name: Get Pull Request Number
-      if: github.event.workflow == 'pull_request && github.event.workflow_run.event != 'closed'
+      if: github.event.workflow == 'pull_request' && github.event.workflow_run.event != 'closed'
       id: pr_info
       shell: bash
       run: |
@@ -100,7 +100,7 @@ runs:
         echo "Pull Request Number: $pr_number"
 
     - name: 'Comment to PR'
-      if: github.event.workflow == 'pull_request && github.event.workflow_run.event != 'closed'
+      if: github.event.workflow == 'pull_request' && github.event.workflow_run.event != 'closed'
       uses: actions/github-script@v6
       env:
         PROJECT_LINK: "${{ inputs.project-link }}"
