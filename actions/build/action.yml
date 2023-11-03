@@ -10,9 +10,6 @@ inputs:
     default: "./_docs-lint"
   build-root:
     default: "./_docs-build"
-  upload-artifacts:
-    type: boolean
-    default: false
 
 runs:
   using: composite
@@ -30,21 +27,18 @@ runs:
       shell: bash
 
     - name: Save inputs
-      if: ${{ inputs.upload-artifacts == 'true' }}
       run: |
         mkdir -p ./inputs
         echo ${{ inputs.revision }} > ./inputs/revision
       shell: bash
     - name: Upload inputs
       uses: actions/upload-artifact@v3
-      if: ${{ inputs.upload-artifacts == 'true' }}
       with:
         name: inputs
         path: inputs/
         retention-days: 1
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
-      if: ${{ inputs.upload-artifacts == 'true' }}
       with:
         name: build-output-md
         path: ${{ inputs.build-root }}

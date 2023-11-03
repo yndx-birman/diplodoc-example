@@ -2,8 +2,6 @@ name: docs-upload-action
 description: Upload documentation
 
 inputs:
-  revision:
-    default: ''
   build-root:
     default: "./_docs-build"
   github-token:
@@ -27,14 +25,12 @@ runs:
   using: composite
   steps:
     - name: Download inputs
-      if: "${{ inputs.revision == '' }}"
       uses: dawidd6/action-download-artifact@v2
       with:
         github_token: ${{ inputs.github-token }}
         workflow: ${{ github.event.workflow_run.workflow_id }}
         name: inputs
     - name: Download build artifact
-      if: "${{ inputs.revision == '' }}"
       uses: dawidd6/action-download-artifact@v2
       with:
         github_token: ${{ inputs.github-token }}
@@ -45,11 +41,7 @@ runs:
     - name: Get revision
       id: get-revision
       run: |
-        if [[ ! -n "${{ inputs.revision }}" ]]; then
-          echo "revision=$(cat ./revision)" >> $GITHUB_OUTPUT
-        else
-          echo "revision=${{ inputs.revision }}" >> $GITHUB_OUTPUT
-        fi
+        echo "revision=$(cat ./revision)" >> $GITHUB_OUTPUT
       shell: bash
 
     - uses: actions/setup-node@v3
