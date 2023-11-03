@@ -30,14 +30,13 @@ runs:
         script: |
           const {GITHUB_TOKEN} = process.env;
 
-          const allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+          const listResponse = await github.rest.actions.listWorkflowRunArtifacts({
              token: GITHUB_TOKEN,
              owner: context.repo.owner,
              repo: context.repo.repo,
              run_id: context.runId || context.payload.workflow_run.id,
           });
-
-          console.log(allArtifacts)
+          const allArtifacts = listResponse.data.artifacts;
 
           const downloads = await Promise.all(allArtifacts.map(async (artifact) => {
             return github.rest.actions.downloadArtifact({
