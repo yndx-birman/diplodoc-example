@@ -53,6 +53,7 @@ runs:
           });
 
     - name: 'Unzip artifacts'
+      shell: bash
       run: |
         unzip inputs.zip
         unzip build-output-md.zip
