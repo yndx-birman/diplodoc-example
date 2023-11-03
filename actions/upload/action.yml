@@ -24,20 +24,15 @@ runs:
   steps:
     - name: 'Download artifacts'
       uses: actions/github-script@v6
-      env:
-        GITHUB_TOKEN: "${{ inputs.github-token }}"
       with:
         script: |
-          const {GITHUB_TOKEN} = process.env;
-
           const listResponse = await github.rest.actions.listWorkflowRunArtifacts({
-             token: GITHUB_TOKEN,
              owner: context.repo.owner,
              repo: context.repo.repo,
              run_id: context.runId || context.payload.workflow_run.id,
           });
           const allArtifacts = listResponse.data.artifacts;
-          console.log(allArtifacts, context.runId)
+          console.log(listResponse)
 
           const downloads = await Promise.all(allArtifacts.map(async (artifact) => {
             return github.rest.actions.downloadArtifact({
