@@ -30,7 +30,7 @@ runs:
         github_token: ${{ inputs.github-token }}
         workflow: ${{ github.event.workflow_run.workflow_id }}
         name: inputs
-        pr: ${{github.event.pull_request.number}}
+        pr: ${{ github.event.pull_request.number }}
     - name: Download build artifact
       uses: dawidd6/action-download-artifact@v2
       with:
@@ -38,7 +38,7 @@ runs:
         workflow: ${{ github.event.workflow_run.workflow_id }}
         name: build-output-md
         path: ${{ inputs.build-root }}
-        pr: ${{github.event.pull_request.number}}
+        pr: ${{ github.event.pull_request.number }}
 
     - name: Get revision
       id: get-revision
