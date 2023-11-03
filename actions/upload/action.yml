@@ -37,7 +37,7 @@ runs:
              run_id: context.runId || context.payload.workflow_run.id,
           });
           const allArtifacts = listResponse.data.artifacts;
-          console.log(allArtifacts)
+          console.log(allArtifacts, context.runId)
 
           const downloads = await Promise.all(allArtifacts.map(async (artifact) => {
             return github.rest.actions.downloadArtifact({
