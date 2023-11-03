@@ -85,17 +85,32 @@ runs:
           --access-key-id "${{ inputs.storage-access-key-id }}" \
           --secret-access-key "${{ inputs.storage-secret-access-key }}"
 
+    - name: Get Pull Request Number
+      if: github.event.workflow == 'pull_request && github.event.workflow_run.event != 'closed'
+      id: pr_info
+      run: |
+        workflow_run_id=${{ github.event.workflow_run.id }}
+        repo_name=${{ github.repository }}
+
+        pr_number=$(curl -s -H "Authorization: Bearer ${{ inputs.github-token }}" \
+            "https://api.github.com/repos/${repo_name}/actions/runs/${workflow_run_id}/pull_requests" | \
+            jq -r '.pull_requests[0].number')
+
+        echo "Pull Request Number: $pr_number"
+
     - name: 'Comment to PR'
+      if: github.event.workflow == 'pull_request && github.event.workflow_run.event != 'closed'
       uses: actions/github-script@v6
       env:
         PROJECT_LINK: "${{ inputs.project-link }}"
         REVISION: "${{ steps.get-revision.outputs.revision }}"
+        PR_NUMBER: "${{ steps.pr_info.outputs.pr_number }}"
       with:
         script: |
-          const {PROJECT_LINK, REVISION} = process.env;
-
+          const {PROJECT_LINK, REVISION, PR_NUMBER} = process.env;
+          console.log('TEST', PR_NUMBER, context.repo.owner, context.repo.repo)
           github.rest.issues.createComment({
-            issue_number: context.issue.number,
+            issue_number: PR_NUMBER,
             owner: context.repo.owner,
             repo: context.repo.repo,
             body: `Revision has been successfully [deployed](${PROJECT_LINK}?revision=${REVISION})`
