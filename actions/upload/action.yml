@@ -91,6 +91,8 @@ runs:
       run: |
         workflow_run_id=${{ github.event.workflow_run.id }}
         repo_name=${{ github.repository }}
+        workflow=${{ github.event.workflow }}
+        event=${{ github.event.workflow_run.event }}
 
         pr_number=$(curl -s -H "Authorization: Bearer ${{ inputs.github-token }}" \
             "https://api.github.com/repos/${repo_name}/actions/runs/${workflow_run_id}" | \
@@ -99,7 +101,6 @@ runs:
         echo "Pull Request Number: $pr_number"
 
     - name: 'Comment to PR'
-      if: github.event.workflow == 'pull_request' && github.event.workflow_run.event != 'closed'
       uses: actions/github-script@v6
       env:
         PROJECT_LINK: "${{ inputs.project-link }}"
