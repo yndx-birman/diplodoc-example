@@ -86,7 +86,6 @@ runs:
           --secret-access-key "${{ inputs.storage-secret-access-key }}"
 
     - name: Get Pull Request Number
-      if: github.event.workflow == 'pull_request' && github.event.workflow_run.event != 'closed'
       id: pr_info
       shell: bash
       run: |
