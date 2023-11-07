@@ -27,7 +27,6 @@ runs:
       with:
         script: |
           const workflowRunId = context.payload.workflow_run && context.payload.workflow_run.id;
-          console.log(workflowRunId, context.runId);
 
           const listResponse = await github.rest.actions.listWorkflowRunArtifacts({
              owner: context.repo.owner,
@@ -55,8 +54,8 @@ runs:
     - name: 'Unzip artifacts'
       shell: bash
       run: |
-        unzip inputs.zip
-        unzip build-output-md.zip
+        unzip inputs.zip -d inputs
+        unzip build-output-md.zip -d build-output-md
 
     - name: Get revision
       id: get-revision
