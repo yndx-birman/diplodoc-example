@@ -28,6 +28,8 @@ runs:
         script: |
           const workflowRunId = context.payload.workflow_run && context.payload.workflow_run.id;
 
+          console.log(workflowRunId, context.runId);
+
           const listResponse = await github.rest.actions.listWorkflowRunArtifacts({
              owner: context.repo.owner,
              repo: context.repo.repo,
