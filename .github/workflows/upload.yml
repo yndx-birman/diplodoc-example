@@ -17,7 +17,7 @@ jobs:
       - name: Upload
         uses: ./actions/upload
         with:
-          github-token: ${{ secrets.MY_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           storage-endpoint: ${{ vars.DIPLODOC_STORAGE_ENDPOINT }}
           storage-region: ${{ vars.DIPLODOC_STORAGE_REGION }}
           storage-bucket: ${{ vars.DIPLODOC_STORAGE_BUCKET }}
