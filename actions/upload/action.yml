@@ -26,10 +26,13 @@ runs:
       uses: actions/github-script@v6
       with:
         script: |
+          const workflowRunId = context.payload.workflow_run && context.payload.workflow_run.id;
+          console.log(workflowRunId, context.runId);
+
           const listResponse = await github.rest.actions.listWorkflowRunArtifacts({
              owner: context.repo.owner,
              repo: context.repo.repo,
-             run_id: context.runId || context.payload.workflow_run.id,
+             run_id: workflowRunId || context.runId,
           });
           const allArtifacts = listResponse.data.artifacts;
           console.log(listResponse)
