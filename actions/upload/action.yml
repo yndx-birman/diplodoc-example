@@ -28,32 +28,24 @@ runs:
       with:
         run_id: ${{ github.event.workflow_run.id }}
         github_token: ${{ inputs.github-token }}
-        skip_unpack: true
         name: inputs
-    - name: 'Download inputs from current workflow run'
-      if: github.event.workflow_run.id == null
-      uses: actions/download-artifact@v3
-      with:
-        name: inputs
+        path: ./inputs
     - name: 'Download build from another workflow run'
       if: github.event.workflow_run.id
       uses: dawidd6/action-download-artifact@v2
       with:
         run_id: ${{ github.event.workflow_run.id }}
         github_token: ${{ inputs.github-token }}
-        skip_unpack: true
         name: build-output-md
-    - name: 'Download build from current workflow run'
+        path: ./build-output-md
+
+    - name: 'Download all artifacts from current workflow'
       if: github.event.workflow_run.id == null
       uses: actions/download-artifact@v3
-      with:
-        name: build-output-md
 
-    - name: 'Unzip artifacts'
+    - name: Display structure of downloaded files
+      run: ls -R
       shell: bash
-      run: |
-        unzip inputs.zip -d inputs
-        unzip build-output-md.zip -d build-output-md
 
     - name: Get revision
       id: get-revision
