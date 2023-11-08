@@ -28,6 +28,7 @@ runs:
         yfm -i ${{ inputs.src-root }} -o ${{ inputs.lint-root }} | tee './build-html.log'
 
         exitcode="$?"
+        echo "exitcode=$exitcode"
         echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
       shell: bash
     - name: Build md2md
