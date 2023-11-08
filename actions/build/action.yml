@@ -19,11 +19,27 @@ runs:
         node-version: 18
     - run: npm i @diplodoc/cli -g
       shell: bash
-    - run: yfm -i ${{ inputs.src-root }} -o ${{ inputs.lint-root }} | tee './build-html.log'
-      shell: bash
-    - name: build
+    - name: Build md2html
+      id: build-md2html
       run: |
+        set +e
+        set -o pipefail
+
+        yfm -i ${{ inputs.src-root }} -o ${{ inputs.lint-root }} | tee './build-html.log'
+
+        exitcode="$?"
+        echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
+      shell: bash
+    - name: Build md2md
+      id: build-md2md
+      run: |
+        set +e
+        set -o pipefail
+
         yfm -i ${{ inputs.src-root }} -o ${{ inputs.build-root }} --output-format md --add-map-file --allow-custom-resources | tee './build-md.log'
+
+        exitcode="$?"
+        echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Save inputs
@@ -50,3 +66,14 @@ runs:
         name: build-log-html
         path: ./build-html.log
         retention-days: 1
+    - name: Exit
+      run: |
+        exit_code="${{ steps.build-md2html.output.exitcode }}"
+
+        if [ "$exit_code" -eq 0 ]; then
+            echo "Build exited successfully."
+        else
+          echo "Build exited with an error. Exit code: $exit_code"
+          exit $exit_code
+        fi
+      shell: bash
