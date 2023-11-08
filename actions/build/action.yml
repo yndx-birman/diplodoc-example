@@ -19,10 +19,13 @@ runs:
         node-version: 18
     - run: npm i @diplodoc/cli -g
       shell: bash
-    - run: yfm -i ${{ inputs.src-root }} -o ${{ inputs.lint-root }} | tee './build-html.log'
+    - run: |
+        set -o pipefail
+        yfm -i ${{ inputs.src-root }} -o ${{ inputs.lint-root }} | tee './build-html.log'
       shell: bash
     - name: build
       run: |
+        set -o pipefail
         yfm -i ${{ inputs.src-root }} -o ${{ inputs.build-root }} --output-format md --add-map-file --allow-custom-resources | tee './build-md.log'
       shell: bash
 
