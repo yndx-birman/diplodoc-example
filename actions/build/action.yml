@@ -30,6 +30,7 @@ runs:
       run: |
         mkdir -p ./inputs
         echo ${{ inputs.revision }} > ./inputs/revision
+        echo ${{ github.event.number }} > ./inputs/pr-number
       shell: bash
     - name: Upload inputs
       uses: actions/upload-artifact@v3
