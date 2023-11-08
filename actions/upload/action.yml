@@ -22,7 +22,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: 'Download inputs'
+    - name: 'Download inputs from another workflow run'
       if: github.event.workflow_run.id
       uses: dawidd6/action-download-artifact@v2
       with:
@@ -30,13 +30,23 @@ runs:
         github_token: ${{ inputs.github-token }}
         skip_unpack: true
         name: inputs
-    - name: 'Download build'
+    - name: 'Download inputs from current workflow run'
+      if: github.event.workflow_run.id == null
+      uses: actions/download-artifact@v3
+      with:
+        name: inputs
+    - name: 'Download build from another workflow run'
       if: github.event.workflow_run.id
       uses: dawidd6/action-download-artifact@v2
       with:
         run_id: ${{ github.event.workflow_run.id }}
         github_token: ${{ inputs.github-token }}
         skip_unpack: true
+        name: build-output-md
+    - name: 'Download build from current workflow run'
+      if: github.event.workflow_run.id == null
+      uses: actions/download-artifact@v3
+      with:
         name: build-output-md
 
     - name: 'Unzip artifacts'
