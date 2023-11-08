@@ -43,10 +43,6 @@ runs:
       if: github.event.workflow_run.id == null
       uses: actions/download-artifact@v3
 
-    - name: Display structure of downloaded files
-      run: ls -R
-      shell: bash
-
     - name: Get revision
       id: get-revision
       run: |
