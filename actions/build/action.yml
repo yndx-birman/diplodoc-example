@@ -27,9 +27,7 @@ runs:
 
         yfm -i ${{ inputs.src-root }} -o ${{ inputs.lint-root }} | tee './build-html.log'
 
-        exitcode="$?"
-        echo "exitcode=$exitcode"
-        echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
+        echo "exitcode=$?" >> $GITHUB_OUTPUT
       shell: bash
     - name: Build md2md
       id: build-md2md
@@ -39,8 +37,8 @@ runs:
 
         yfm -i ${{ inputs.src-root }} -o ${{ inputs.build-root }} --output-format md --add-map-file --allow-custom-resources | tee './build-md.log'
 
-        exitcode="$?"
-        echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
+        echo "exitcode=$?" >> $GITHUB_OUTPUT
+
       shell: bash
 
     - name: Save inputs
@@ -69,13 +67,12 @@ runs:
         retention-days: 1
     - name: Exit
       run: |
-        exit_code=${{ steps.build-md2html.output.exitcode }}
-        echo "exit-code=${{ steps.build-md2html.output.exitcode }}"
+        exitcode=${{ steps.build-md2html.outputs.exitcode }}
 
-        if [ "$exit_code" -eq 0 ]; then
+        if [ "$exitcode" -eq 0 ]; then
             echo "Build exited successfully."
         else
-          echo "Build exited with an error. Exit code: $exit_code"
-          exit $exit_code
+          echo "Build exited with an error. Exit code: $exitcode"
+          exit $exitcode
         fi
       shell: bash
