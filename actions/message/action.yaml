@@ -1,0 +1,111 @@
+name: docs-message-action
+description: Comment build log and release link
+
+inputs:
+  github-token:
+    required: true
+  project-link:
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: 'Download inputs'
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        run_id: ${{ github.event.workflow_run.id }}
+        github_token: ${{ inputs.github-token }}
+        name: inputs
+        path: ./inputs
+    - name: 'Download build log'
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        run_id: ${{ github.event.workflow_run.id }}
+        github_token: ${{ inputs.github-token }}
+        name: build-log-html
+
+    - name: Get revision
+      id: get-revision
+      run: |
+        echo "revision=$(cat ./inputs/revision)" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Prepare message
+      id: get-message
+      run: |
+        ICON_OK=':white_check_mark:'
+        ICON_WARN='⚠️'
+        ICON_ERROR=':x:'
+
+        PROJECT_LINK=${{ inputs.project-link }}
+        REVISION=${{ steps.get-revision.outputs.revision }}
+        BUILD_LOG="./build-html.log"
+
+        MESSAGE=""
+        if [ "${{ github.event.workflow_run.conclusion }}" == "success" ]; then
+            MESSAGE+="\\n\\n Revision builded successful"
+            MESSAGE+="\\n\\n Revision preview [link]($PROJECT_LINK?revision=${REVISION})"
+            CARD_ICON=$ICON_OK
+        else
+            MESSAGE+="\\n\\n Revision build failed"
+            CARD_ICON=$ICON_ERROR
+        fi
+
+        CARD="### $CARD_ICON Documentation build"
+        CARD+="$MESSAGE\\n\\n"
+
+        function log_section {
+            PICK="$(grep "^$3" "$2" | sort | uniq || echo "")"
+
+            if [[ -n $PICK ]]; then
+                MARK=$4
+                LOG_COUNT=$(grep --count "" <<<"$PICK")
+
+                PICK=$(head -n 15 <<<"$PICK")
+
+                TAB=$(echo "##### $1 ($LOG_COUNT)\\\\n$PICK")
+
+                if [[ $LOG_COUNT -gt 15 ]]; then
+                    TRIM_COUNT=$(($LOG_COUNT - 15))
+                    TAB+="\\n\\n  Log was truncated. ($TRIM_COUNT records)"
+                fi
+
+                TAB=$(echo "$TAB" | while read line; do echo -n "$line\\n"; done)
+                TAB=${TAB//$3/"\\n  $MARK"}
+
+                echo "$TAB\\n"
+            fi
+        }
+
+        ERROR_SEC=$(log_section Errors "$BUILD_LOG" "ERR" "$ICON_ERROR")
+        WARN_SEC=$(log_section Warnings "$BUILD_LOG" "WARN" "$ICON_WARN")
+
+        if [[ -n "$ERROR_SEC" || -n "$WARN_SEC" ]]; then
+            CARD+="#### Build logs\\n\\n"
+            CARD+="$ERROR_SEC$WARN_SEC\\n\\n"
+        fi
+
+        echo "message=$CARD" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Get PR Number
+      id: get-pr-number
+      run: |
+        echo "pr-number=$(cat ./inputs/pr-number)" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: 'Comment to PR'
+      uses: actions/github-script@v6
+      if: github.event.workflow_run
+      env:
+        MESSAGE: "${{ steps.get-message.outputs.message }}"
+        PR_NUMBER: "${{ steps.get-pr-number.outputs.pr-number }}"
+      with:
+        script: |
+          const {MESSAGE, PR_NUMBER} = process.env;
+          github.rest.issues.createComment({
+            issue_number: PR_NUMBER,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: MESSAGE,
+          })

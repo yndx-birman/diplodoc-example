@@ -4,8 +4,6 @@ description: Upload documentation
 inputs:
   github-token:
     required: true
-  project-link:
-    required: true
   storage-bucket:
     required: true
   storage-endpoint:
@@ -81,27 +79,3 @@ runs:
           --prefix "${{ env.PREFIX }}" \
           --access-key-id "${{ inputs.storage-access-key-id }}" \
           --secret-access-key "${{ inputs.storage-secret-access-key }}"
-
-    - name: Get PR Number
-      id: get-pr-number
-      if: github.event.workflow_run
-      run: |
-        echo "pr-number=$(cat ./inputs/pr-number)" >> $GITHUB_OUTPUT
-      shell: bash
-
-    - name: 'Comment to PR'
-      uses: actions/github-script@v6
-      if: github.event.workflow_run
-      env:
-        PROJECT_LINK: "${{ inputs.project-link }}"
-        REVISION: "${{ steps.get-revision.outputs.revision }}"
-        PR_NUMBER: "${{ steps.get-pr-number.outputs.pr-number }}"
-      with:
-        script: |
-          const {PROJECT_LINK, REVISION, PR_NUMBER} = process.env;
-          github.rest.issues.createComment({
-            issue_number: PR_NUMBER,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: `Revision has been successfully [deployed](${PROJECT_LINK}?revision=${REVISION})`
-          })
