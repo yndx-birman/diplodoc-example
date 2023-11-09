@@ -43,16 +43,16 @@ runs:
 
         MESSAGE=""
         if [ "${{ github.event.workflow_run.conclusion }}" == "success" ]; then
-            MESSAGE+="\\n\\n Revision builded successful"
-            MESSAGE+="\\n\\n Revision preview [link]($PROJECT_LINK?revision=${REVISION})"
+            MESSAGE+="\n\n Revision builded successful"
+            MESSAGE+="\n\n Revision preview [link]($PROJECT_LINK?revision=${REVISION})"
             CARD_ICON=$ICON_OK
         else
-            MESSAGE+="\\n\\n Revision build failed"
+            MESSAGE+="\n\n Revision build failed"
             CARD_ICON=$ICON_ERROR
         fi
 
         CARD="### $CARD_ICON Documentation build"
-        CARD+="$MESSAGE\\n\\n"
+        CARD+="$MESSAGE\n\n"
 
         function log_section {
             PICK="$(grep "^$3" "$2" | sort | uniq || echo "")"
@@ -63,17 +63,17 @@ runs:
 
                 PICK=$(head -n 15 <<<"$PICK")
 
-                TAB=$(echo "##### $1 ($LOG_COUNT)\\\\n$PICK")
+                TAB=$(echo "##### $1 ($LOG_COUNT)\n$PICK")
 
                 if [[ $LOG_COUNT -gt 15 ]]; then
                     TRIM_COUNT=$(($LOG_COUNT - 15))
-                    TAB+="\\n\\n  Log was truncated. ($TRIM_COUNT records)"
+                    TAB+="\n\n  Log was truncated. ($TRIM_COUNT records)"
                 fi
 
-                TAB=$(echo "$TAB" | while read line; do echo -n "$line\\n"; done)
-                TAB=${TAB//$3/"\\n  $MARK"}
+                TAB=$(echo "$TAB" | while read line; do echo -n "$line\n"; done)
+                TAB=${TAB//$3/"\n  $MARK"}
 
-                echo "$TAB\\n"
+                echo "$TAB\n"
             fi
         }
 
@@ -81,8 +81,8 @@ runs:
         WARN_SEC=$(log_section Warnings "$BUILD_LOG" "WARN" "$ICON_WARN")
 
         if [[ -n "$ERROR_SEC" || -n "$WARN_SEC" ]]; then
-            CARD+="#### Build logs\\n\\n"
-            CARD+="$ERROR_SEC$WARN_SEC\\n\\n"
+            CARD+="#### Build logs\n\n"
+            CARD+="$ERROR_SEC$WARN_SEC\n\n"
         fi
 
         echo "message=$CARD" >> $GITHUB_OUTPUT
