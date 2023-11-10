@@ -104,5 +104,5 @@ runs:
             issue_number: PR_NUMBER,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body,
+            body: MESSAGE,
           })
