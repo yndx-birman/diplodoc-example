@@ -31,7 +31,6 @@ runs:
       shell: bash
 
     - name: Prepare message
-      id: get-message
       run: |
         ICON_OK=':white_check_mark:'
         ICON_WARN='⚠️'
@@ -83,7 +82,7 @@ runs:
             CARD+="\n#### Build logs\n$ERROR_SEC\n$WARN_SEC\n"
         fi
 
-        echo -e "message=\"$CARD\"" >> $GITHUB_OUTPUT
+        echo -e "$CARD" > card.txt
       shell: bash
 
     - name: Get PR Number
@@ -96,7 +95,7 @@ runs:
       uses: actions/github-script@v6
       if: github.event.workflow_run
       env:
-        MESSAGE: "${{ steps.get-message.outputs.message }}"
+        MESSAGE: "$(cat ./card.txt)"
         PR_NUMBER: "${{ steps.get-pr-number.outputs.pr-number }}"
       with:
         script: |
