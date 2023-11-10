@@ -43,11 +43,11 @@ runs:
 
         MESSAGE=""
         if [ "${{ github.event.workflow_run.conclusion }}" == "success" ]; then
-            MESSAGE+="\n Revision builded successful"
-            MESSAGE+="\n Revision preview [link]($PROJECT_LINK?revision=${REVISION})"
+            MESSAGE+="\nRevision builded successful"
+            MESSAGE+="\nRevision preview [link]($PROJECT_LINK?revision=${REVISION})"
             CARD_ICON=$ICON_OK
         else
-            MESSAGE+="\n< Revision build failed"
+            MESSAGE+="\nRevision build failed"
             CARD_ICON=$ICON_ERROR
         fi
 
@@ -63,14 +63,13 @@ runs:
 
                 PICK=$(head -n 15 <<<"$PICK")
 
-                TAB=$(echo "##### $1 ($LOG_COUNT)\n$PICK")
+                TAB=$(echo "##### $1 ($LOG_COUNT) $PICK")
 
                 if [[ $LOG_COUNT -gt 15 ]]; then
                     TRIM_COUNT=$(($LOG_COUNT - 15))
-                    TAB+="\n\n  Log was truncated. ($TRIM_COUNT records)"
+                    TAB+="\n\nLog was truncated. ($TRIM_COUNT records)"
                 fi
 
-                TAB=$(echo "$TAB" | while read line; do echo -n "$line\n"; done)
                 TAB=${TAB//$3/"\n  $MARK"}
 
                 echo "$TAB\n"
@@ -81,14 +80,10 @@ runs:
         WARN_SEC=$(log_section Warnings "$BUILD_LOG" "WARN" "$ICON_WARN")
 
         if [[ -n "$ERROR_SEC" || -n "$WARN_SEC" ]]; then
-            CARD+="\
-              #### Build logs\n \
-              $ERROR_SEC \
-              $WARN_SEC \
-            "
+            CARD+="\n#### Build logs\n$ERROR_SEC\n$WARN_SEC\n"
         fi
 
-        echo "message=$CARD" >> $GITHUB_OUTPUT
+        echo -e "message=\"$CARD\"" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Get PR Number
@@ -106,10 +101,6 @@ runs:
       with:
         script: |
           const {MESSAGE, PR_NUMBER} = process.env;
-          const body = `
-          first line
-          second line
-          `
           github.rest.issues.createComment({
             issue_number: PR_NUMBER,
             owner: context.repo.owner,
