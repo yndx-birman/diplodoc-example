@@ -1,5 +1,23 @@
 # Diplodoc
 
+[text](./file1.md)
+[text](./file2.md)
+[text](./file3.md)
+[text](./file4.md)
+[text](./file5.md)
+[text](./file6.md)
+[text](./file7.md)
+[text](./file8.md)
+[text](./file9.md)
+[text](./file10.md)
+[text](./file11.md)
+[text](./file12.md)
+[text](./file13.md)
+[text](./file14.md)
+[text](./file15.md)
+[text](./file16.md)
+[text](./file17.md)
+
 Diplodoc is an open-source platform for working with your documentation in the "Documentation as a Code" paradigm.
 Simple and comfortable solution for everyone.
 
