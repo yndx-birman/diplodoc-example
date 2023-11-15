@@ -4,7 +4,20 @@ on:
   workflow_dispatch:
 
 jobs:
+  check-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            src:
+              - './docs/**'
+      - name: Check changes
+        if: steps.changes.outputs.src == 'true'
+        run: 'exit 1'
   check-env:
+    needs: check-changes
     runs-on: ubuntu-latest
     steps:
       - name: "Check is DIPLODOC_STORAGE_BUCKET secret exists"
