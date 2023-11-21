@@ -2,8 +2,8 @@ langs: ['en']
 
 docs-viewer:
   favicon-src: https://storage.yandexcloud.net/diplodoc-www-assets/favicon/favicon.ico
+  pdf: true
   logo-options:
-    pdf: true
     src: https://storage.yandexcloud.net/diplodoc-www-assets/navigation/diplodoc-logo.svg
     src-dark: https://storage.yandexcloud.net/diplodoc-www-assets/logo/ddos-logo-dark.svg
     title: Example
