@@ -19,13 +19,28 @@ runs:
         node-version: 18
     - run: npm i @diplodoc/cli -g
       shell: bash
+
+    - name: Need pdf generation
+      id: get-pdf-params
+      run: |
+        need-pdf=$(yq -r '.docs-viewer.pdf // false' < ${{ inputs.src-root }}/.yfm)
+        pdf-args=''
+
+        if [[ "$need-pdf" == 'true' ]]; then
+          pdf-args='--single-page'
+        fi
+
+        echo "need-pdf=$need-pdf" >> $GITHUB_OUTPUT
+        echo "pdf-args=$pdf-args" >> $GITHUB_OUTPUT
+      shell: bash
+
     - name: Build md2html
       id: build-md2html
       run: |
         set +e
         set -o pipefail
 
-        yfm -i ${{ inputs.src-root }} -o ${{ inputs.lint-root }} | tee './build-html.log'
+        yfm -i ${{ inputs.src-root }} -o ${{ inputs.lint-root }} ${{ steps.get-pdf-params.outputs.pdf-args }} | tee './build-html.log'
 
         echo "exitcode=$?" >> $GITHUB_OUTPUT
       shell: bash
@@ -40,6 +55,18 @@ runs:
         echo "exitcode=$?" >> $GITHUB_OUTPUT
 
       shell: bash
+
+    - name: Run docs2pdf
+      if: steps.get-pdf-params.outputs.need-pdf == 'true'
+      run: |
+        set +e
+        set -o pipefail
+
+        npm i @diplodoc/docs2pdf@beta -g
+
+        docs2pdf -i ${{ inputs.lint-root }}
+
+        rsync -r --include='*.pdf' --include='*/' --exclude='*' ${{ inputs.lint-root }}/ ${{ inputs.build-root }}/
 
     - name: Save inputs
       run: |
