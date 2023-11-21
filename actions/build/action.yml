@@ -58,6 +58,7 @@ runs:
 
     - name: Run docs2pdf
       if: steps.get-pdf-params.outputs.need-pdf == 'true'
+      shell: bash
       run: |
         set +e
         set -o pipefail
