@@ -12,7 +12,6 @@ input-folder
 |-- presets.yaml (presets for vairables)
 |-- index.yaml (index page)
 |-- pages (Content pages)
-    |-- faq.md
     |-- how-to.md
 |-- _assets (directory with pictures)
     |-- image1.png
