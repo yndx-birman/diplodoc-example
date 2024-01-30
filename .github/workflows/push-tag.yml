@@ -23,6 +23,7 @@ jobs:
           version-file: './version.json'
           skip-git-pull: 'true'
           skip-on-empty: 'false'
+          release-count: '1'
 
       - name: Create Release
         uses: actions/create-release@v1
