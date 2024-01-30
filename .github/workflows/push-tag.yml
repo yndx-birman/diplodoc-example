@@ -35,5 +35,6 @@ jobs:
 
       - name: Update SemVer tag
         uses: zyactions/update-semver@v1
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         with:
          tag: ${{ steps.changelog.outputs.tag }}
