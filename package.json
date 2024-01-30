@@ -1,6 +1,6 @@
 {
   "name": "@diplodoc/documentation-template",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "template for your diplodoc documentation with hot reload development server",
   "homepage": "https://github.com/diplodoc-platform/documentation-template",
   "repository": {
