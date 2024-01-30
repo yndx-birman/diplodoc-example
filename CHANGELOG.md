@@ -1,4 +1,13 @@
-# 1.1.0 (2024-01-30)
+# [1.2.0](https://github.com/diplodoc-platform/documentation-template/compare/v1.1.0...v1.2.0) (2024-01-30)
+
+
+### Features
+
+* add update semver tag step ([815b133](https://github.com/diplodoc-platform/documentation-template/commit/815b133913ba1ef6054185472db4a48e1497b101))
+
+
+
+# [1.1.0](https://github.com/diplodoc-platform/documentation-template/compare/bcfc1b17334ae6aafe43293816dc6721436055c7...v1.1.0) (2024-01-30)
 
 
 ### Bug Fixes
