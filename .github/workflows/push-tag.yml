@@ -34,3 +34,5 @@ jobs:
 
       - name: Update SemVer tag
         uses: zyactions/update-semver@v1
+        with:
+         tag: ${{ steps.changelog.outputs.tag }}
