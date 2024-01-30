@@ -1,3 +1,14 @@
+## [2.0.0](https://github.com/diplodoc-platform/documentation-template/compare/v1.3.1...v2.0.0) (2024-01-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* use conventionalcommits preset
+
+### Features
+
+* use conventionalcommits preset ([fef618f](https://github.com/diplodoc-platform/documentation-template/commit/fef618fad8c91fc1957b206350c7fb8734b9bd43))
+
 ## [1.3.1](https://github.com/diplodoc-platform/documentation-template/compare/v1.3.0...v1.3.1) (2024-01-30)
 
 
@@ -5,27 +16,35 @@
 
 * change update semver tag step ([11d0ff6](https://github.com/diplodoc-platform/documentation-template/commit/11d0ff60a59f393392d5bbfb2c719b845c13395b))
 
-
-
-# [1.3.0](https://github.com/diplodoc-platform/documentation-template/compare/v1.2.0...v1.3.0) (2024-01-30)
+## [1.3.0](https://github.com/diplodoc-platform/documentation-template/compare/v1.2.0...v1.3.0) (2024-01-30)
 
 
 ### Features
 
 * add update semver tag step ([7cf4919](https://github.com/diplodoc-platform/documentation-template/commit/7cf49196e8b5447d4522e64fca7115e4a825c2e4))
 
-
-
-# [1.2.0](https://github.com/diplodoc-platform/documentation-template/compare/v1.1.0...v1.2.0) (2024-01-30)
+## [1.2.0](https://github.com/diplodoc-platform/documentation-template/compare/v1.1.0...v1.2.0) (2024-01-30)
 
 
 ### Features
 
 * add update semver tag step ([815b133](https://github.com/diplodoc-platform/documentation-template/commit/815b133913ba1ef6054185472db4a48e1497b101))
 
+## [1.1.0](https://github.com/diplodoc-platform/documentation-template/compare/bcfc1b17334ae6aafe43293816dc6721436055c7...v1.1.0) (2024-01-30)
 
 
-# [1.1.0](https://github.com/diplodoc-platform/documentation-template/compare/bcfc1b17334ae6aafe43293816dc6721436055c7...v1.1.0) (2024-01-30)
+### ⚠ BREAKING CHANGES
+
+* test major bump
+
+### Features
+
+* add logo ([bcfc1b1](https://github.com/diplodoc-platform/documentation-template/commit/bcfc1b17334ae6aafe43293816dc6721436055c7))
+* add permissions ([e1581e4](https://github.com/diplodoc-platform/documentation-template/commit/e1581e40d728c666be83fccad2cbd847bcd46460))
+* change push tag workflow ([36ec1fe](https://github.com/diplodoc-platform/documentation-template/commit/36ec1fee7f26161c09144eafec451819212c1835))
+* comment release link ([0c3568f](https://github.com/diplodoc-platform/documentation-template/commit/0c3568f00b0aebd8fd81e244fea7b59556941ee2))
+* test major bump ([0e8c832](https://github.com/diplodoc-platform/documentation-template/commit/0e8c832ce9f64d5b181c0e7c4ac701732847bcdf))
+* use common actions ([2822aef](https://github.com/diplodoc-platform/documentation-template/commit/2822aef528aa39db37bd0cbc98bf6d2f2a608f19))
 
 
 ### Bug Fixes
@@ -65,15 +84,4 @@
 * pass github token ([4f7f429](https://github.com/diplodoc-platform/documentation-template/commit/4f7f429cf9acb387764172792c1e6710aac1928f))
 * remove condition for comment release link ([81509e7](https://github.com/diplodoc-platform/documentation-template/commit/81509e7ad6a60831fe07e4565aaa630cb65d93aa))
 * remove revision input ([d744e54](https://github.com/diplodoc-platform/documentation-template/commit/d744e54b75e890d7ecb5d36ac05aec41e68ccc55))
-
-
-### Features
-
-* add logo ([bcfc1b1](https://github.com/diplodoc-platform/documentation-template/commit/bcfc1b17334ae6aafe43293816dc6721436055c7))
-* add permissions ([e1581e4](https://github.com/diplodoc-platform/documentation-template/commit/e1581e40d728c666be83fccad2cbd847bcd46460))
-* change push tag workflow ([36ec1fe](https://github.com/diplodoc-platform/documentation-template/commit/36ec1fee7f26161c09144eafec451819212c1835))
-* comment release link ([0c3568f](https://github.com/diplodoc-platform/documentation-template/commit/0c3568f00b0aebd8fd81e244fea7b59556941ee2))
-* use common actions ([2822aef](https://github.com/diplodoc-platform/documentation-template/commit/2822aef528aa39db37bd0cbc98bf6d2f2a608f19))
-
-
 
