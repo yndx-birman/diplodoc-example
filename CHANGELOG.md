@@ -1,3 +1,10 @@
+## [2.0.6](https://github.com/diplodoc-platform/documentation-template/compare/v2.0.5...v2.0.6) (2024-01-30)
+
+
+### Bug Fixes
+
+* test changelog generation ([2bc8aff](https://github.com/diplodoc-platform/documentation-template/commit/2bc8affe24378fa676b4ab58b06966610a2ce78f))
+
 ## 3.1.0
 
 ### Features
