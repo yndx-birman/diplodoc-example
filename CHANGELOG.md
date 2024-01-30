@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/diplodoc-platform/documentation-template/compare/v2.0.1...v2.0.2) (2024-01-30)
+
+
+### Bug Fixes
+
+* do not use update semver on empty commits ([961f3ab](https://github.com/diplodoc-platform/documentation-template/commit/961f3ab22773578c0b953f14f165f786a6e2ee14))
+
 ## [2.0.1](https://github.com/diplodoc-platform/documentation-template/compare/v2.0.0...v2.0.1) (2024-01-30)
 
 
@@ -29,11 +36,4 @@
 ### Features
 
 * add update semver tag step ([7cf4919](https://github.com/diplodoc-platform/documentation-template/commit/7cf49196e8b5447d4522e64fca7115e4a825c2e4))
-
-## [1.2.0](https://github.com/diplodoc-platform/documentation-template/compare/v1.1.0...v1.2.0) (2024-01-30)
-
-
-### Features
-
-* add update semver tag step ([815b133](https://github.com/diplodoc-platform/documentation-template/commit/815b133913ba1ef6054185472db4a48e1497b101))
 
