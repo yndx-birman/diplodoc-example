@@ -1,3 +1,6 @@
+---
+contributors: [{'avatar':'https://avatars.githubusercontent.com/u/62902338?v=4','email':'62902338+yndx-birman@users.noreply.github.com','login':'yndx-birman','name':'yndx-birman','url':'https://github.com/yndx-birman'}]
+---
 # Simple documentation project with YFM
 
 
