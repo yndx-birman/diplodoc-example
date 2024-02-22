@@ -1,12 +1,5 @@
 langs: ['en']
 
-connector:
-  type: github
-  github: 
-    endpoint: https://api.github.com
-    owner: yndx-birman
-    repo: diplodoc-example
-
 docs-viewer:
   favicon-src: https://storage.yandexcloud.net/diplodoc-www-assets/favicon/favicon.ico
   logo-options:
