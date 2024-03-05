@@ -3,11 +3,6 @@
 Diplodoc is an open-source platform for working with your documentation in the "Documentation as a Code" paradigm.
 Simple and comfortable solution for everyone.
 
-## Advantages of the platform
-### Easy to use
-- Work with documents in the same way as with code
-- Minimal efforts for deployment and integration
-
 ### Speed
 - Fast validation, build and deploy for your projects
 - Easy integration with your developement pipelines
