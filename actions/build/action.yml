@@ -23,15 +23,15 @@ runs:
     - name: Need pdf generation
       id: get-pdf-params
       run: |
-        need-pdf=$(yq -r '.docs-viewer.pdf // false' < ${{ inputs.src-root }}/.yfm)
-        pdf-args=''
+        need_pdf=$(yq -r '.docs-viewer.pdf // false' < ${{ inputs.src-root }}/.yfm)
+        pdf_args=''
 
-        if [[ "$need-pdf" == 'true' ]]; then
-          pdf-args='--single-page'
+        if [[ "$need_pdf" == 'true' ]]; then
+          pdf_args='--single-page'
         fi
 
-        echo "need-pdf=$need-pdf" >> $GITHUB_OUTPUT
-        echo "pdf-args=$pdf-args" >> $GITHUB_OUTPUT
+        echo "need_pdf=$need_pdf" >> $GITHUB_OUTPUT
+        echo "pdf_args=$pdf_args" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Build md2html
@@ -40,7 +40,7 @@ runs:
         set +e
         set -o pipefail
 
-        yfm -i ${{ inputs.src-root }} -o ${{ inputs.lint-root }} ${{ steps.get-pdf-params.outputs.pdf-args }} | tee './build-html.log'
+        yfm -i ${{ inputs.src-root }} -o ${{ inputs.lint-root }} ${{ steps.get-pdf-params.outputs.pdf_args }} | tee './build-html.log'
 
         echo "exitcode=$?" >> $GITHUB_OUTPUT
       shell: bash
@@ -57,7 +57,8 @@ runs:
       shell: bash
 
     - name: Run docs2pdf
-      if: steps.get-pdf-params.outputs.need-pdf == 'true'
+      if: steps.get-pdf-params.outputs.need_pdf == 'true'
+      shell: bash
       run: |
         set +e
         set -o pipefail
